@@ -15,23 +15,51 @@ public class BattleService {
     }
 
     public AdventureResult battle(HeroProfile hero, BossEnemy boss, AttackAction action) {
-        // TODO: Implement the battle flow.
-        // Questions to answer:
-        // - Who attacks first?
-        // - How many rounds are allowed?
-        // - How is damage resolved?
-        // - How will randomness affect the result, if at all?
         AdventureResult result = new AdventureResult();
-        result.setWinner("TODO");
-        result.setRounds(0);
-        result.setReward("TODO");
-        result.addLine("TODO: implement battle logic");
+        int rounds = 0;
 
-        // Keep the field in use so students can decide whether to rely on it.
-        if (random.nextInt(1) == 0) {
-            // TODO: Replace placeholder branch with real deterministic or random logic.
+        result.addLine("--- BATTLE COMMENCE ---");
+
+        while (hero.isAlive() && boss.isAlive() && rounds < 50) {
+            rounds++;
+            result.addLine("\n[Round " + rounds + "]");
+
+            int heroDmg = action.getDamage();
+            if (random.nextInt(100) < 10) {
+                result.addLine(boss.getName() + " swiftly dodged the attack!");
+            } else {
+                boss.takeDamage(heroDmg);
+                result.addLine(hero.getName() + " strikes with " + action.getActionName() + " for " + heroDmg + " DMG.");
+                result.addLine("   -> Effects: " + action.getEffectSummary());
+            }
+
+            if (!boss.isAlive()) {
+                result.addLine("*** " + boss.getName() + " collapses! ***");
+                break;
+            }
+
+            int bossDmg = boss.getAttackPower();
+            if (random.nextInt(100) < 20) {
+                bossDmg = (int) (bossDmg * 1.5);
+                result.addLine(boss.getName() + " unleashes a devastating heavy strike!");
+            }
+            hero.takeDamage(bossDmg);
+            result.addLine(boss.getName() + " retaliates, hitting " + hero.getName() + " for " + bossDmg + " DMG.");
+
+            if (!hero.isAlive()) {
+                result.addLine("*** " + hero.getName() + " has fallen in battle! ***");
+                break;
+            }
         }
 
+        result.setRounds(rounds);
+        if (hero.isAlive() && !boss.isAlive()) {
+            result.setWinner(hero.getName());
+        } else if (!hero.isAlive() && boss.isAlive()) {
+            result.setWinner(boss.getName());
+        } else {
+            result.setWinner("Draw");
+        }
         return result;
     }
 }
