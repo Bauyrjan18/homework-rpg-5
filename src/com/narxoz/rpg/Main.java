@@ -14,11 +14,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Homework 5 Demo: Decorator + Facade ===\n");
 
-        // TODO: Create a hero and a boss with your own meaningful stats.
-        HeroProfile hero = new HeroProfile("TODO Hero", 100);
-        BossEnemy boss = new BossEnemy("TODO Boss", 120, 15);
+        HeroProfile hero = new HeroProfile("Arthas The Brave", 100);
+        BossEnemy boss = new BossEnemy("Dragon Lord Onyxia", 120, 15);
 
-        // TODO: Start with a base action and then create several decorated versions.
         AttackAction basic = new BasicAttack("Strike", 10);
         AttackAction enhanced = new FireRuneDecorator(
                 new PoisonCoatingDecorator(
@@ -35,11 +33,18 @@ public class Main {
         System.out.println("Enhanced damage: " + enhanced.getDamage());
         System.out.println("Enhanced effects: " + enhanced.getEffectSummary());
 
-        // TODO: Replace the placeholder preview above with richer proof of runtime composition.
-
         System.out.println("\n--- Facade Preview ---");
         DungeonFacade facade = new DungeonFacade().setRandomSeed(42L);
         AdventureResult result = facade.runAdventure(hero, boss, enhanced);
+
+        System.out.println(">> Preparation Phase <<");
+        System.out.println(result.getPreparationSummary());
+        System.out.println();
+
+        System.out.println(">> Battle Log <<");
+        for (String line : result.getLog()) {
+            System.out.println(line);
+        }
 
         System.out.println("Winner: " + result.getWinner());
         System.out.println("Rounds: " + result.getRounds());
@@ -47,11 +52,6 @@ public class Main {
         for (String line : result.getLog()) {
             System.out.println(line);
         }
-
-        // TODO: Expand this demo so it clearly proves:
-        // 1) multiple decorator combinations
-        // 2) one full dungeon run through the facade
-        // 3) readable final summary
 
         System.out.println("\n=== Demo Complete ===");
     }
